@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+
+<!--
+Este trabalho foi desenvolvido no âmbito da disciplina de Programação Web, com o objetivo de criar uma app de uma coleção temática de vídeos do Youtube, com um sistema de vistas dinâmico
+Realizado por: João Gonçalves - 23882 - IPT
+-->
+
+<html lang="pt">
+	<head>
+		<script>
+			//Base de dados dos vídeos do YouTube constituída por um array de objetos {titulo, codRefYT, coments, duracMS, dataPublAMD, numVisuals}
+			var dadosVidYT = [
+				{
+					titulo:"IT HAPPENED! Elon Musk FINALLY Reveals New Tesla Motorbike!",
+					codRefYT:"3awLFfJbKtU",
+					coments:"Tesla wants to provide an electric vehicle for everybody. This is why it is going into different categories. It has the sedan, pickup, and truck covered. It has even promised a quad-bike.",
+					duracMS:800,
+					dataPublAMD:20211124,
+					numVisuals:1504242,
+				},
+				{
+					titulo:"The Future Of Motorcycles? BMW CE-04",
+					codRefYT:"ftiX_lxQtp0",
+					coments:"Tesla  wants  to  provide  an  electric  vehicle   for everybody. This  is  why it  is  going   into different categories. It has the sedan, pickup, and truck covered. It has even promised a quad-bike.",
+					duracMS:941,
+					dataPublAMD:20210113,
+					numVisuals:23894,
+				},
+				{
+					titulo:"10 Futuristic Electric Motorcycles Incorporating Newest Design Trends & Battery Technologies",
+					codRefYT:"21f1BdTOItY",
+					coments:"The times when electric motorcycles were considered as novelty items are starting to fade. This form of zero emission transport is becoming more common on public roads and there are even some people claiming that there is nothing special about all-electric powertrains.",
+					duracMS:1425,
+					dataPublAMD:20220402,
+					numVisuals:12370,
+				},
+				{
+					titulo:"Self Balancing Motorcycle of the Future is more like a car",
+					codRefYT:"dnwS56l3rDk",
+					coments:"This is not the first time a two-wheeled car has been attempted. Many have tried and failed; most recently being Lit Motors, which started with a similar concept and ran out of money. But this one is promised to make it to production by 2020.",
+					duracMS:152,
+					dataPublAMD:20181208,
+					numVisuals:1329910,
+				},
+				{
+					titulo:"More Electric Motorbike Inventions Presented w/ Futuristic Designs and Smart Tech",
+					codRefYT:"I7a0Ld4bBNc",
+					coments:"News about innovations in the field of electric motorcycle development are getting easier to come by. They are attracting more attraction from consumers too. As more and more riders are getting used to the idea of zero emission riding, the two-wheeler lineups are getting more varied and competitive when compared to regular bikes.",
+					duracMS:1043,
+					dataPublAMD:20210821,
+					numVisuals:19418,
+				},
+				{
+					titulo:"Future motorcycles: Honda self-balancing Riding Assist tech keeps bike balanced - TomoNews",
+					codRefYT:"Okf283Ct-NY",
+					coments:"Honda has unveiled a well-balanced piece of motorcycle tech designed to help riders stay in the saddle at low speeds.",
+					duracMS:401,
+					dataPublAMD:20170106,
+					numVisuals:2016288,
+				},
+				{
+					titulo:"10 Concept Motorcycles You Don't Know Existed",
+					codRefYT:"7UGgfUQCHjE",
+					coments:"Honda has unveiled a well-balanced piece of motorcycle tech designed to help riders stay in the saddle at low speeds.",
+					duracMS:1024,
+					dataPublAMD:20200428,
+					numVisuals:139618,
+				},
+				{
+					titulo:"BMW Self Balancing Motorbike Demonstration LIVE Driving BMW Vision 100 BMW Autonomous Bike CARJAM",
+					codRefYT:"NXMGi9kQ3TE",
+					coments:"The BMW Self Balancing Motorcycle VISION NEXT 100 rights itself while even stationary, remaining upright when the rider has dismounted.",
+					duracMS:347,
+					dataPublAMD:20170110,
+					numVisuals:12147103,
+				},
+				{
+					titulo:"Motorcycle helmet of the future! - BMW booth - CES 2016",
+					codRefYT:"VdPGT1j4QN0",
+					coments:"BMW wasn't only showing off car tech this year - they had a SICK new helmet that many techie riders, like myself, will be very excited to see!",
+					duracMS:434,
+					dataPublAMD:20160111,
+					numVisuals:494247,
+				},
+				{
+					titulo:"Part 2 - The Technology and Innovation of the World’s Fastest Electric Motorcycle - WMC250EV",
+					codRefYT:"PkHCc_6RUaM",
+					coments:"The WMC250EV incorporates revolutionary aerodynamic concepts and technical innovations that will not only allow the bike to break current electric Land Speed Records but will impact on the future of mass-market electric motorcycles.",
+					duracMS:223,
+					dataPublAMD:20210123,
+					numVisuals:57869,
+				},
+				{
+					titulo:"Top 5 Future Motorcycles YOU MUST SEE || HT High Technology || Latest Technology",
+					codRefYT:"d1LuEgZHY70",
+					coments:"Yamaha Tesseract, Kawasaki J Concept Three-Wheeled, Honda V4, Honda Riding Assist, BMW Motorrad VISION NEXT 100",
+					duracMS:1043,
+					dataPublAMD:20170605,
+					numVisuals:27693,
+				},
+				{
+					titulo:"10 Electric Motorcycle Innovations Previewing the Future of Emission-Free Riding",
+					codRefYT:"WxgsozW1pX4",
+					coments:"New smart technologies have made their way into all spheres of human life and vehicles that we use to travel for short and long distances are not an exception. Nowadays we have witnessed the invention and application of a series of smart vehicle technologies that were designed to make commuting safer, faster and more convenient.",
+					duracMS:1202,
+					dataPublAMD:20190110,
+					numVisuals:23811,
+				},
+				{
+					titulo:"Bosch Motorcycle Technology, New Surround View Camera - Autoline Daily 2359",
+					codRefYT:"IOuJU_0s3DY",
+					coments:"Bosch’s radar-based assistance systems monitor a rider’s surroundings and automatically keep the bike at a safe distance from vehicles in front. We asked the motorcycling journalist Kentaro Sagawa to put these new systems to the test.",
+					duracMS:622,
+					dataPublAMD:20180522,
+					numVisuals:7882,
+				},
+				{
+					titulo:"Stark Future: the new norm in motorcycle battery technology",
+					codRefYT:"eGhaZDUKzdI",
+					coments:"The range of the Stark VARG is similar to a full tank of gas on a 450. The bike can complete a full heat at MXGP intensity, or up to 6 hours of trail riding. A full recharge takes 1-2 hours.",
+					duracMS:124,
+					dataPublAMD:20211214,
+					numVisuals:6407,
+				},
+				{
+					titulo:"Our Predictions For The FUTURE Of Motorcycles! (New Trends)",
+					codRefYT:"hOZNdMgS79o",
+					coments:"Scramblers are dead as disco people, but what's next for motorcycles in the coming years?",
+					duracMS:2157,
+					dataPublAMD:20220205,
+					numVisuals:52417,
+				},
+				{
+					titulo:"Yamaha MOTOROiD \"Demonstration Run\" (2)",
+					codRefYT:"4Lx0ZJGgsFs",
+					coments:"Yamaha Design Exhibition 2018",
+					duracMS:447,
+					dataPublAMD:20181104,
+					numVisuals:10079608,
+				},
+				{
+					titulo:"2022 Hottest Upcoming Motorcycles (New Upcoming Bikes of 2022)",
+					codRefYT:"8rDNVGWrYkY",
+					coments:"We all have our favorite bikes, but there are certain types of models that are generally coveted by riders from all walks of life. The entire community of drivers eagerly awaits each update and each new generation of these machines. Today we discuss the loudest news and announcements from the motorcycle world for the upcoming 2021 and 2022 model years.",
+					duracMS:820,
+					dataPublAMD:20211019,
+					numVisuals:154754,
+				},
+				{
+					titulo:"10 Best Electric Motorcycle 2022 You Can Buy Right now",
+					codRefYT:"nKnZnxdc7nQ",
+					coments:"If your cars can be battery-powered, then why cannot be your motorcycles? 2022 is an exciting year for the people who love battery-powered vehicles and today we bring you the top 10 electric motorcycles 2022.",
+					duracMS:710,
+					dataPublAMD:20220408,
+					numVisuals:36659,
+				},
+				{
+					titulo:"Damon Motorcycles | Imagine Motorcycling in the Future",
+					codRefYT:"pm6UkHvUh4Y",
+					coments:"An experience that adapts to you, the changing traffic, and to any road you’re on. Imagine having a ‘sixth sense’ of everything around you. And being connected to your surroundings in an entirely ​new​ way.",
+					duracMS:105,
+					dataPublAMD:20190709,
+					numVisuals:160509,
+				},
+				{
+					titulo:"10 Future Motorcycles YOU MUST SEE",
+					codRefYT:"jt324afcIYg",
+					coments:"Every year a lot of conceptual motorcycle models are created in the world. Some are created to really go into production and some simply demonstrate a new technological solutions for the use of further models. And today we present to you the 10 most amazing Future Motorcycles!",
+					duracMS:1030,
+					dataPublAMD:20190406,
+					numVisuals:6715855,
+				},
+				{
+					titulo:"You can buy this 'Speeder' flying motorcycle now | What the Future",
+					codRefYT:"5OaMmCRy1Bo",
+					coments:"Jetpack Aviation is now taking preorders for its flying motorcycle that looks strikingly similar to Imperial Speeder bikes from Star Wars. Also, a robotic gripper that works like a Venus' Flytrap, and we visit NASA for a look at its massive, crater-making gun.",
+					duracMS:425,
+					dataPublAMD:20190320,
+					numVisuals:170018,
+				},
+				{
+					titulo:"Best Unique Design Concept Bikes - 16 Coolest & Sexiest Concept Motorcycles Was Made Till Now",
+					codRefYT:"pRyqBWeb1qc",
+					coments:"I think Everybody saw Batman and Tron Movies. We all see there are unique designed bikes. Are they really exist in real life? So answer is yes!!!!!!!! They really exist in real life. ",
+					duracMS:537,
+					dataPublAMD:20170107,
+					numVisuals:323092,
+				},
+				{
+					titulo:"5 Insane Futuristic Bikes You Must See",
+					codRefYT:"AoMXRycq4ns",
+					coments:"Motorcycles provide the feeling of living on the edge, and what better way to fulfill your thrill for speed than being on an Insane Futuristic Bikes that is ahead of its time? With summer coming up in North America, people will be seeing more motorcycles on the road -- so grab your helmet and go for a ride!",
+					duracMS:633,
+					dataPublAMD:20210530,
+					numVisuals:4638,
+				},
+				{
+					titulo:"This Is Why People Are Switching To Electric Motorcycles",
+					codRefYT:"mDL013W613g",
+					coments:"The E-Motorcycle Of The Future TROMOX may be the best in the electric motorcycle industry in the near future. Electric bikes and electric motorcycles are the fastest way to travel in future.",
+					duracMS:653,
+					dataPublAMD:20211117,
+					numVisuals:7663,
+				},
+				{
+					titulo:"4 Futuristic motorcycles YOU WONT BELIEVE EXIST",
+					codRefYT:"c2SDVC_UdAI",
+					coments:"People always strive for comfort. Which led to the invention of machines that could do our job in a much shorter time and efficiently. As you know, the turning point was the 20th century, during this period the main machines were created and later developed over time.",
+					duracMS:619,
+					dataPublAMD:20170303,
+					numVisuals:3618384,
+				},
+				
+			];
+			
+		</script>
+		<meta charset="utf-8" />
+		<title>Trab2 - 23882 - João Gonçalves</title>
+		<style>
+		
+			body{background-color: #000033;}
+			img{height: 375px; width: 800px;}
+			h5{color: #A9A9A9; margin-top: 43px;}
+			h3{margin-top: 0px;}
+			p{color: #DCDCDC; font: 13px arial;}
+			
+			.botao{background-color: #000056; color: #ffffff; font: 14px arial; border-color: transparent; border-width: 5px;}
+			.botao:hover{background-color: #0000cc;}
+			.botao:active{background-color: #ffffff;}
+			.botao2{background-color: #000056; color: #ffffff; font: 14px arial; border-color: transparent; border-width: 5px; margin-left: 10px; display: inline;}
+			.botao2:hover{background-color: #0000cc;}
+			.botao2:active{background-color: #ffffff;}
+			.vista{font:bold 18px arial; width:800px; height:600px; margin:0px auto; margin-top: 10px;}
+			.video{font: 18px arial; color:#ffffff; background-color: #000033; margin-bottom: -30px;}
+			.dadosVideo{color: #989898; text-align: center; align: center; font-size: 18px;}
+			.dadosVideo2{font-size: 13px; color: #989898;}
+			.coment{margin-left: 330px; font-size: 17px; height: 160px;}
+			.video2{text-align: left; margin-left: 5px; margin-right: 5px;}
+			.separador{width: 190px; margin-left: -3px;;}
+			.dadosBrancos{color: #ffffff; font-size: 13px;}
+			
+			#introducao{font:bold 18px arial; width:800px; height:600px; background-color:#000056;}
+			#but{font:bold 18px arial; margin: 0px auto; background-color: #000033; margin-left: 0px;}
+			#tituloIntro{color: #F0FFFF; text-align: right; width: 215px; float: left; margin-top: 12px;}
+			#textoIntro{width: 550px; margin-left: 240px;}
+			#catalogo{overflow-y: scroll;}
+			#catalogo2{width: auto;}
+			#imgVideoCatalogo{float: left; width:300px; height:160px; margin-left: 10px; opacity: 0.5; border-style: solid; border-color: #ffffff; border-width: 1px;}
+			#imgVideoCatalogo:hover{cursor: pointer; opacity: 1;}
+			#tituloCatalogo{background-color: #000056; font-size: 21px; text-align: center;}
+			#tituloCatalogo2{font-size: 17px; text-align: left; color: #ffffff;}
+			#totalDadosVideo{text-align: center; background-color: #000056; font-size: 17px;}
+			#botaoesquerda{margin-left: -5px;}
+			#dadosVideos{background-color: #000046; width: 216px; float: left; height: 455px;}
+			#dropDown{width: 574px;}
+			#ifVideo{width: 570px; margin-left: 5px; height: 450px;}
+			#comentVideos{font: 15px monaco;}
+			#ord{margin-left: 105px; background-color: transparent; color: #ffffff;}
+		
+		</style>
+		<script>
+			
+			//inicialização
+			function inic(){
+				criaPopularidade();
+				verIntroducao();
+				ordTitulo();
+				mostraVideos();
+				//dispõe, na vista "catalogo2", todos os videos do array "dadosVidYT"
+				outId("catalogo2", listaTodosVideos());
+			}
+
+			//******** input/output ********
+			
+			//retorna um valor do array "dadosVidYT", dados o respetivo index e nome da chave
+			function valor(chave, iVideo){
+				return dadosVidYT[iVideo][chave];
+			}
+			
+			//cria uma superstring que contem todos os dados de um video, dado o seu index
+			function criaDadosVideo(iVideo){
+				//código HTML (a abrir um DIV na class "video")
+				var codHTML = '<div class="video">';
+				//título do vídeo
+				codHTML += '<h2 id = "tituloCatalogo">' + valor("titulo", iVideo) + '</h2>';
+				//imagem do vídeo
+				codHTML += '<img id = "imgVideoCatalogo" src="http://img.youtube.com/vi/' + valor("codRefYT", iVideo) + '/mqdefault.jpg" onclick="verVideos2('+iVideo+')" /></a>';
+				//comentários
+				codHTML += '<p class="coment">' + valor("coments", iVideo) + '</p>';
+				//dados adicionais do video
+				codHTML += '<h2 id = "totalDadosVideo"<span class="dadosVideo" id = "duracaoCatalogo">Duração: ' + convDurac(valor("duracMS", iVideo)) + ' | Data de Publicação: ' + convData(valor("dataPublAMD", iVideo)) + ' | Visualizações: ' + valor("numVisuals", iVideo) + ' | Popularidade: ' + valor("factPopul", iVideo) + '</span></h2>';
+				codHTML += '</div>';
+				//entrega o código HTML
+				return codHTML + '<br /><br />';
+			}
+			
+			//cria uma superstring que contem todos os dados de um video(excepto a sua imagem), dado o seu index
+			function criaDadosVideoSemImagem(iVideo){
+				//código HTML (a abrir um DIV na class "video")
+				var codHTML = '<div class="video2">';
+				//título do vídeo
+				codHTML += '<h2 id = "tituloCatalogo2">' + valor("titulo", iVideo) + '</h2>' + '<hr class="separador" />';
+				//comentários
+				codHTML += '<p id="comentVideos">' + valor("coments", iVideo) + '</p>' + '<hr class="separador" />';
+				//duração do vídeo no formato "M:SS"
+				codHTML += '<span class="dadosVideo2">Duração: </span>' + '<span class = "dadosBrancos">' + convDurac(valor("duracMS", iVideo)) + '</span><br />';
+				//data de lançamento do vídeo no formato "DD/MM/AAAA"
+				codHTML += '<span class="dadosVideo2">Data de publicação: </span>' + '<span class = "dadosBrancos">' + convData(valor("dataPublAMD", iVideo)) + '</span><br />';
+				//número de visualizações
+				codHTML += '<span class="dadosVideo2">Visualizações: </span>' + '<span class = "dadosBrancos">' +valor("numVisuals", iVideo) + '</span><br />';
+				//factor de popularidade
+				codHTML += '<span class="dadosVideo2">popularidade(vis/dia): </span>' + '<span class = "dadosBrancos">' + valor("factPopul", iVideo) + '</span><br />';
+				codHTML += '</div>';
+				//entrega o código HTML
+				return codHTML + '<br /><br />';
+			}
+			
+			//carrega os videos do array "dadosVidYT" na dropDown
+			function mostraVideos(){
+				var i, codHtml = '';
+				for(i=0; i<dadosVidYT.length; i++) codHtml += '<option>' + valor("titulo", i) + '</option>';
+				outId("dropDown", codHtml);
+				//mostra os dados do video selecionado na dropdown
+				mostraDadosVideos();
+			}
+			
+			//mostra, na iframe, a janela de visualização do video selecionado na dropdown
+			function mostraVideoiFrame(){
+				var index = refId("dropDown").selectedIndex;
+				refId("ifVideo").src = "http://www.youtube.com/embed/" + valor("codRefYT", index) + "?";
+			}
+			
+			//mostra, na iframe, a janela de visualização de um video dado o seu index
+			function mostraVideoiFrame2(index){
+				refId("ifVideo").src = "http://www.youtube.com/embed/" + valor("codRefYT", index) + "?";
+			}
+			
+			//mostra os dados do video selecioonado na dropdown
+			function mostraDadosVideos(){
+				var index = refId("dropDown").selectedIndex;
+				outId("dadosVideos", criaDadosVideoSemImagem(index));
+				mostraVideoiFrame();
+			}
+			
+			//mostra os dados de um video dado o seu index
+			function mostraDadosVideos2(index){
+				outId("dadosVideos", criaDadosVideoSemImagem(index));
+				mostraVideoiFrame2(index);
+				refId("dropDown").selectedIndex = index;
+			}
+			
+			//cria um factor de popularidade (media de visualizações por dia) e carrega-o em cada objeto do array "dadosVidYT"
+			function criaPopularidade(){
+				var i;
+				for(i=0; i<dadosVidYT.length; i++){
+					dadosVidYT[i].factPopul = Math.floor(valor("numVisuals", i)/numDiasDif(valor("dataPublAMD", i)));
+				}
+			}
+
+			//********* processos **********
+			
+			//esconde todas as vistas
+			function escondeVistas(){
+				refId("introducao").style.display = "none";
+				refId("catalogo").style.display = "none";
+				refId("vistaVideos").style.display = "none";
+			}
+			
+			//dispõe apenas a vista de catálogo
+			function verCatalogo(){
+				escondeVistas();
+				refId("catalogo").style.display = "block";
+			}
+			
+			//dispõe apenas a vista de introdução
+			function verIntroducao(){
+				escondeVistas();
+				refId("introducao").style.display = "block";
+			}
+			
+			//dispõe apenas a vista de videos
+			function verVideos(){
+				escondeVistas();
+				refId("vistaVideos").style.display = "block";
+			}
+			
+			//dispõe a vista de videos carregando o respetivo video que foi selecionado no catalgo e as suas informações na iframe
+			function verVideos2(index){
+				mostraDadosVideos2(index);
+				escondeVistas();
+				refId("vistaVideos").style.display = "block";
+			}
+			
+			//gera uma referência de um objeto do interface, dado o seu ID
+			function refId(idObj){
+				return document.getElementById(idObj);
+			}
+
+			//coloca o conteúdo indicado no objeto contentor indicado pelo seu ID
+			function outId(idObj, cont){
+				document.getElementById(idObj).innerHTML = cont;
+			}
+			
+			//gera uma duração no formato "M:SS" a partir da duração indicada segundo o modelo numérico 100*M+S
+			function convDurac(duracNum){
+				var durac = duracNum + "", tam = durac.length;
+				var m = durac.substring(0, tam-2);
+				var s = durac.substring(tam-2, tam);
+				return m + ":" + s;
+			}
+			
+			//gera uma data no formato "DD/MM/AAAA" a partir da data indicada segundo o modelo numérico 10000*A+100*M+D
+			function convData(dataNum){
+				var data = dataNum + "";
+				var ano = data.substring(0, 4);
+				var mes = data.substring(4, 6);
+				var dia = data.substring(6, 8);
+				return dia + "/" + mes + "/" + ano;
+			}
+			
+			//retorna o numero de dias entre a data do video e a data atual
+			function numDiasDif(dataVid){
+				var ano = Math.floor(dataVid/10000);
+				var mesDia = dataVid%10000;
+				var mes = Math.floor(mesDia/100);
+				var dia = mesDia%100;
+				var data = new Date(ano, mes, dia);
+				var diaHoje = new Date();
+				return Math.floor((diaHoje-data)/86400000);
+			}
+			
+			//gera uma listagem dos vídeos do array "dadosVidYT"
+			function listaTodosVideos(){
+				var i, nVids = dadosVidYT.length, codHTML = '';
+				//itera todas as descrições de vídeos
+				for(i=0; i<nVids; i++){
+					codHTML += criaDadosVideo(i);
+				}
+				//entrega o código HTML
+				return codHTML;
+			}
+			
+			//ordena a ordem do array "dadosVidYT" por titulo
+			function ordTitulo(){
+				dadosVidYT.sort(function(a,b){
+					if(a.titulo <= b.titulo) return -1; 
+					else return 1;	
+				})
+				//carrega os videos na vista "catalogo2" pela ordem selecionada
+				outId("catalogo2", listaTodosVideos());
+				//carrega os videos na dropdown pela ordem selecionada
+				mostraVideos();
+			}
+			
+			//ordena a ordem do array "dadosVidYT" por duração
+			function ordDuracao(){
+				dadosVidYT.sort(function(a,b){
+					if(a.duracMS <= b.duracMS) return -1; 
+					else return 1;	
+				})
+				//carrega os videos na vista "catalogo2" pela ordem selecionada
+				outId("catalogo2", listaTodosVideos());
+				//carrega os videos na dropdown pela ordem selecionada
+				mostraVideos();
+			}
+			
+			//ordena a ordem do array "dadosVidYT" por data
+			function ordData(){
+				dadosVidYT.sort(function(a,b){
+					if(a.dataPublAMD <= b.dataPublAMD) return -1; 
+					else return 1;	
+				})
+				//carrega os videos na vista "catalogo2" pela ordem selecionada
+				outId("catalogo2", listaTodosVideos());
+				//carrega os videos na dropdown pela ordem selecionada
+				mostraVideos();
+			}
+			
+			//ordena a ordem do array "dadosVidYT" por popularidade
+			function ordPopularidade(){
+				dadosVidYT.sort(function(a,b){
+					if(a.factPopul <= b.factPopul) return -1; 
+					else return 1;	
+				})
+				//carrega os videos na vista "catalogo2" pela ordem selecionada
+				outId("catalogo2", listaTodosVideos());
+				//carrega os videos na dropdown pela ordem selecionada
+				mostraVideos();
+			}
+			
+				
+		</script>
+	</head>
+	<body onload="inic()">
+			
+		<div class = "vista" id = "introducao">
+		
+			<div id = "but">
+				<button class = "botao" onclick = "verCatalogo()">Ver catálogo</button>
+				<button class = "botao" id = "botaoesquerda" onclick = "verVideos()">Ver vídeos</button>
+			</div>
+			
+			<img src="https://saffysprocket.com/wp-content/uploads/2022/02/Motorcycle-technology-radar2-scaled.jpeg" /><br />
+			
+			<div id = "tituloIntro">
+				<h3>The Future of Motocycling Technology</h3>
+				<h5 id = "h5CV">Uma coleção de vídeos do YouTube</h5>
+			</div>
+			
+			<div id = "textoIntro">
+				<p>A indústria moderna de motociclos depende de inovações frequentes para sustentar o rápido progresso da tecnologia dos motociclos. Poderíamos até argumentar que já vivemos no futuro. A eliminação gradual da utilização de combustíveis fósseis e a transição para motociclos eléctricos marca o início de um novo capítulo na história do motociclismo. Os primeiros motociclos eléctricos eram caros e sofriam de limitações de capacidade. No entanto, as marcas de motociclos eléctricos modernos resolveram a maioria dos problemas. Agora, estamos prontos a transformar expectativas antigas em realidade. As motocicletas eléctricas vêm agora com IA adaptativa, tecnologia "ride-by-wire", sistemas de comunicação veículo-a-veículo, ergonomia melhorada do condutor, e muito mais. Abaixo, analisamos mais de perto o futuro da tecnologia de motociclos.</p>
+			</div>
+			
+		</div>
+		
+		<div class = "vista" id = "catalogo">
+			
+			<div id = "but2">
+				<button class = "botao" onclick = "verIntroducao()">Ver Introdução</button>
+				<button class = "botao" id = "botaoesquerda" onclick = "verVideos()">Ver vídeos</button>
+				<h4 class ="botao2" id="ord">Ordenação:</h4>
+				<button class = "botao2" onclick = "ordTitulo()">Título</button>
+				<button class = "botao2" id = "botaoesquerda" onclick = "ordDuracao()">Duração</button>
+				<button class = "botao2" id = "botaoesquerda" onclick = "ordData()">Data de Publicação</button>
+				<button class = "botao2" id = "botaoesquerda" onclick = "ordPopularidade()">Popularidade</button>
+			</div>
+			
+			<div class = "vista" id = "catalogo2"></div>
+			
+		</div>
+		
+		<div class = "vista" id = "vistaVideos">
+		
+			<button class = "botao" onclick = "verIntroducao()">Ver Introdução</button>
+			<button class = "botao" id = "botaoesquerda" onclick = "verCatalogo()">Ver Catálogo</button>
+			<select class ="botao" id = "dropDown" onchange = "mostraDadosVideos()"></select>
+			
+			<div id = "dadosVideos"></div>
+			
+			<div>
+			
+				<iframe id = "ifVideo" ></iframe>
+			
+			</div>
+			
+		</div>
+		
+	</body>
+</html>
